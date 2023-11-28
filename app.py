@@ -7,7 +7,10 @@ app = Flask(
 
 @app.route("/")
 def login():
-    return render_template('login.html')
+    names = ["Covenant", "Mihlali", "Yonwaba"]
+    for name in names:clear
+        print(name)
+    return render_template('login.html', name=names)
 
 @app.route("/register/learner")
 def learner_register():
@@ -32,3 +35,6 @@ def send_email():
 @app.route("/cancel/application")
 def cancel_application():
     return render_template('cancelApplication.html')
+
+if __name__ == "__main__":
+    app.run(debug=True, host="localhost", port=3000)
