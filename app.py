@@ -1,12 +1,12 @@
 from flask import Flask, render_template
 import pyodbc
 
-cnxn = pyodbc.connect(
-    "Driver={/etc/odbcinst.ini /usr/share/man/man5/odbcinst.ini.5.gz};"
-    "Server=LAPTOP-1A8Q1T1G\SQLEXPRESS;"
-    "Database=ImpumeleloHighSchoolBusRegistrationDB;"
-    "Trusted_Connection=yes;"
-)
+# cnxn = pyodbc.connect(
+#     "Driver={ODBC Driver 17 for SQL Server};"
+#     "Server=LAPTOP-1A8Q1T1G\SQLEXPRESS;"
+#     "Database=ImpumeleloHighSchoolBusRegistrationDB;"
+#     "Trusted_Connection=yes;"
+# )
 
 app = Flask(
     __name__,
@@ -45,11 +45,11 @@ def send_email():
 def cancel_application():
     learners = []
 
-    cursor = cnxn.cursor()
-    cursor.execute('SELECT * FROM learner')
+    # cursor = cnxn.cursor()
+    # cursor.execute('SELECT * FROM learner')
 
-    for row in cursor:
-        print(learners)
+    # for row in cursor:
+    #     print(learners)
 
     return render_template('cancelApplication.html', learners=learners)
 
