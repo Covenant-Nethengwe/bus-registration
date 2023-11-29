@@ -53,3 +53,30 @@ $('#registerLearner').click(function(e) {
     })
 
 })
+
+$('#registerAdmin').click(function(e) {
+    e.preventDefault();
+
+    const initials = $('#initials').val();
+    const surname = $('#surname').val();
+    const email = $('#email').val();
+    const password = $('#password').val();
+
+    $.ajax({
+        url: '/register/admin',
+        type: 'POST',
+        data: {
+            name: initials,
+            l_name: surname,
+            email: email,
+            password: password
+        },
+        success: function (response) {
+            console.log(response);
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    })
+
+})

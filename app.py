@@ -59,8 +59,8 @@ def parent_register():
             message = "Passwords must match!"
             return render_template('parentRegister.html', warning=message)
         
-        if password.count < 4:
-            message = "Passwords exceed for characters or numbers!"
+        if len(password) < 4:
+            message = "Password length must be greater than 4 characters!"
             return render_template('parentRegister.html', warning=message)
     
         if password == c_password:
@@ -73,25 +73,35 @@ def parent_register():
             cnxn.close()
             return render_template('login.html')
 
-@app.route("/register/admin")
+@app.route("/register/admin", methods=["GET", "POST"])
 def admin_register():
     if request.method == "GET":
         return render_template('adminRegister.html')
-        
+    
     if request.method == "POST":
-        f_name = request.form.get("learnerName")
-        l_name = request.form.get("learnerSurname")
-        cell_no = request.form.get("cellNumber")
-        grade = request.form.get("grade")
+        name = request.form.get("initials")
+        l_name = request.form.get("surname")
+        email = request.form.get("email")
+        password = request.form.get("password")
+        c_password = request.form.get("confirmPassword")
 
-        query = f'''
-        INSERT INTO learner (learnername, learnersurname, learnercellphonenumber, grade) 
-        VALUES('{f_name}', '{l_name}', '{cell_no}','{grade}')'''
+        if password != c_password:
+            message = "Passwords must match!"
+            return render_template('adminRegister.html', warning=message)
         
-        cnxn.execute(query)
-        cnxn.commit()
-
-    return render_template('cancelApplication.html')
+        if len(password) < 4:
+            message = "Password length must be greater than 4 characters!"
+            return render_template('adminRegister.html', warning=message)
+    
+        if password == c_password:
+            query = f'''
+            INSERT INTO administrator (initials, surname, password, email) 
+            VALUES('{name}', '{l_name}', '{password}', '{email}')'''
+            
+            cnxn.execute(query)
+            cnxn.commit()
+            cnxn.close()
+            return render_template('login.html')
 
 @app.route("/assign-learner/bus")
 def assign_learner_bus():
