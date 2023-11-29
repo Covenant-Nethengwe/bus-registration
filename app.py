@@ -1,4 +1,13 @@
 from flask import Flask, render_template
+import pyodbc
+
+cnxn = pyodbc.connect(
+    "Driver={/etc/odbcinst.ini /usr/share/man/man5/odbcinst.ini.5.gz};"
+    "Server=LAPTOP-1A8Q1T1G\SQLEXPRESS;"
+    "Database=ImpumeleloHighSchoolBusRegistrationDB;"
+    "Trusted_Connection=yes;"
+)
+
 app = Flask(
     __name__,
     template_folder="./pages",
@@ -7,7 +16,10 @@ app = Flask(
 
 @app.route("/")
 def login():
-    return render_template('login.html')
+    names = ["Covenant", "Mihlali", "Yonwaba"]
+    for name in names:
+        print(name)
+    return render_template('login.html', names=names)
 
 @app.route("/register/learner")
 def learner_register():
@@ -31,4 +43,15 @@ def send_email():
 
 @app.route("/cancel/application")
 def cancel_application():
-    return render_template('cancelApplication.html')
+    learners = []
+
+    cursor = cnxn.cursor()
+    cursor.execute('SELECT * FROM learner')
+
+    for row in cursor:
+        print(learners)
+
+    return render_template('cancelApplication.html', learners=learners)
+
+if __name__ == "__main__":
+    app.run(debug=True, host="localhost", port=3000)

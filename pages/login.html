@@ -10,6 +10,10 @@
 </head>
 <body>
     <h1>This is the login page!!!</h1>
-    
+    {% block names %}
+        {% for name in names %}
+            <p>{{ name }}</p>
+        {% endfor %}
+    {% endblock %}
 </body>
 </html>
