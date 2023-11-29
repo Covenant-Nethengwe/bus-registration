@@ -25,33 +25,32 @@ def login():
         return render_template('login.html')
     
     if request.method == "POST":
-        email = request.form.get("learnerName")
-        password = request.form.get("learnerSurname")
-
+        email = request.form.get("email")
+        password = request.form.get("password")
+        print(request.form)
         if email.__contains__('@gmail'):
-            query = f'''SELECT (parentid, parentemail, password) FROM parent WHERE parentemail = '{email}' AND password = '{password}' '''
+            query = f'''SELECT parentid, parentemail, password FROM parent WHERE parentemail = '{email}' AND password = '{password}' '''
 
-            cnxn.execute(query)
-            cnxn.execute()
+            cursor.execute(query)
 
             for row in cursor:
                 credentials.append(row)
         
         if email.__contains__('@admin'):
-            query = f'''SELECT (adminid, email, password) FROM administrator WHERE email = '{email}' AND password = '{password}' '''
+            query = f'''SELECT adminid, email, password FROM administrator WHERE email = '{email}' AND password = '{password}' '''
 
-            cnxn.execute(query)
-            cnxn.execute()
+            cursor.execute(query)
 
             for row in cursor:
                 credentials.append(row)
 
         if not credentials:
             message = "Incorrect email or password"
-            return render_template('login', warning=message)
+            return render_template('login.html', warning=message)
         else:
             global session_id
-            session_id = credentials[0]
+            session_id = credentials[0][0]
+            print(session_id)
             return redirect(url_for('cancel_application', parent_id=session_id))
 
 @app.route("/register/learner", methods=["GET", "POST"])
@@ -103,7 +102,7 @@ def parent_register():
             cnxn.execute(query)
             cnxn.commit()
             cnxn.close()
-            return render_template('login.html')
+            return redirect(url_for('login'))
 
 @app.route("/register/admin", methods=["GET", "POST"])
 def admin_register():
@@ -160,6 +159,20 @@ def cancel_application(parent_id):
         query_children = f'''SELECT * FROM learner WHERE learnerid = {learner_id}'''
         cursor.execute(query_children)
         for row in cursor:
+            print(row)
+            if row[6] == True and row[5] == 1 or row[5] == 2 or row[5] == 3:
+                if row[5] == 1:
+                    row[5] = "Bus 1"
+                    row[6] = "Registered"
+                elif row[5] == 2:
+                    row[5] = "Bus 2"
+                    row[6] = "Registered"
+                elif row[5] == 3:
+                    row[5] = "Bus 3"
+                    row[6] = "Registered"
+            else:
+                row[6] = "Not Registered"
+
             children.append(row)
 
     return render_template('cancelApplication.html', learners=children)
