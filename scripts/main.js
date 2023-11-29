@@ -1,5 +1,4 @@
 $("#btnRegisterParent").click(function (e) {
-    alert('button have been clicked')
     e.preventDefault();
     
     const fName = $('#firstName').val();
@@ -28,3 +27,29 @@ $("#btnRegisterParent").click(function (e) {
 
 })
 
+$('#registerLearner').click(function(e) {
+    e.preventDefault();
+
+    const name = $('#learnerName').val();
+    const surname = $('#learnerSurname').val();
+    const phone = $('#cellNumber').val();
+    const grade = $('#grade').val();
+
+    $.ajax({
+        url: '/register/learner',
+        type: 'POST',
+        data: {
+            f_name: name,
+            l_name: surname,
+            cell_no: phone,
+            grade: grade
+        },
+        success: function (response) {
+            console.log(response);
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    })
+
+})

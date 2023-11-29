@@ -22,9 +22,25 @@ def login():
         print(name)
     return render_template('login.html', names=names)
 
-@app.route("/register/learner")
+@app.route("/register/learner", methods=["GET", "POST"])
 def learner_register():
-    return render_template('learnerRegister.html')
+    if request.method == "GET":
+        return render_template('learnerRegister.html')
+    
+    if request.method == "POST":
+        f_name = request.form.get("learnerName")
+        l_name = request.form.get("learnerSurname")
+        cell_no = request.form.get("cellNumber")
+        grade = request.form.get("grade")
+
+        query = f'''
+        INSERT INTO learner (learnername, learnersurname, learnercellphonenumber, grade) 
+        VALUES('{f_name}', '{l_name}', '{cell_no}','{grade}')'''
+        
+        cnxn.execute(query)
+        cnxn.commit()
+    
+    return render_template('cancelApplication.html')
 
 @app.route("/register/parent", methods=["GET", "POST"])
 def parent_register():
@@ -59,7 +75,23 @@ def parent_register():
 
 @app.route("/register/admin")
 def admin_register():
-    return render_template('adminRegister.html')
+    if request.method == "GET":
+        return render_template('adminRegister.html')
+        
+    if request.method == "POST":
+        f_name = request.form.get("learnerName")
+        l_name = request.form.get("learnerSurname")
+        cell_no = request.form.get("cellNumber")
+        grade = request.form.get("grade")
+
+        query = f'''
+        INSERT INTO learner (learnername, learnersurname, learnercellphonenumber, grade) 
+        VALUES('{f_name}', '{l_name}', '{cell_no}','{grade}')'''
+        
+        cnxn.execute(query)
+        cnxn.commit()
+
+    return render_template('cancelApplication.html')
 
 @app.route("/assign-learner/bus")
 def assign_learner_bus():

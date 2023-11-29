@@ -12,7 +12,7 @@
 </head>
 <body>
     <h2>Learner Registration</h2>
-    <form>
+    <form action="/register/learner" method="post">
         <label for="learnerName">Learner Name:</label>
         <input type="text" id="learnerName" name="learnerName" required>
 
@@ -23,13 +23,13 @@
         <input type="tel" id="cellNumber" name="cellNumber" required>
 
         <label for="grade">Grade:</label>
-        <select id="grade" name="grade" required>
+        <select style="width: 120px;" id="grade" name="grade" required>
             <option value="9">9th Grade</option>
             <option value="10">10th Grade</option>
             <option value="11">11th Grade</option>
             <option value="12">12th Grade</option>
         </select>
-
+        <br/>
         <button type="submit" id="registerLearner">Register Learner</button>
     </form>
 </body>
