@@ -6,15 +6,15 @@
     <title>Bus Registration</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/learnerRegistration.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="../scripts/main.js"></script>
     <title>Bus Registration Service</title>
 </head>
 <body>
-    <div class="container">
-        <h2>Learner Registration</h2>
-        <div class="form-group">
-            <label for="learnerName">Learner Name:</label>
-            <input type="text" id="learnerName" name="learnerName" required>
-        </div>
+    <h2>Learner Registration</h2>
+    <form action="/register/learner" method="post">
+        <label for="learnerName">Learner Name:</label>
+        <input type="text" id="learnerName" name="learnerName" required>
 
         <div class="form-group">
             <label for="learnerSurname">Learner Surname:</label>
@@ -26,18 +26,15 @@
             <input type="tel" id="cellNumber" name="cellNumber" required>
         </div>
 
-        <div class="form-group">
-            <label for="grade">Grade:</label>
-            <select id="grade" name="grade" required>
-                <option value="8">8th Grade</option>
-                <option value="9">9th Grade</option>
-                <option value="10">10th Grade</option>
-                <option value="11">11th Grade</option>
-                <option value="12">12th Grade</option>
-            </select>
-        </div>
-
-        <button type="submit">Register Learner</button>
-    </div>
+        <label for="grade">Grade:</label>
+        <select style="width: 120px;" id="grade" name="grade" required>
+            <option value="9">9th Grade</option>
+            <option value="10">10th Grade</option>
+            <option value="11">11th Grade</option>
+            <option value="12">12th Grade</option>
+        </select>
+        <br/>
+        <button type="submit" id="registerLearner">Register Learner</button>
+    </form>
 </body>
 </html>

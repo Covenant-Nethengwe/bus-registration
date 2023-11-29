@@ -1,0 +1,42 @@
+table,
+td {
+  border: 1px solid #333;
+  text-align: center;
+  font-size: 1.5rem;
+}
+table {
+ margin: auto;
+}
+
+thead,
+tfoot {
+  background-color: #333;
+  color: #fff;
+}
+
+tr > td{
+  padding: 1px 15px 1px 15px;
+} 
+
+tfoot > tr > td {
+  padding: 5px;
+}
+
+th {
+  padding: 20px;
+}
+
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 1rem;
+  font-size: 1.3rem;
+}
+
+h1{
+  text-align: center;
+}
