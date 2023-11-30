@@ -4,18 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1.0, user-scalable=n">
     <title>Bus Registration</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/cancelApplication.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='../css/style.css') }}">
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='../css/cancelApplication.css') }}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="../scripts/main.js"></script>
     <title>Bus Registration Service</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Cancel Learner Appliction</h1>
-
-    <div class="table-container">
-      <form action="/cancel/application"></form>
-    <table>
+    
+    <table id="table">
       <thead>
         <tr>
           <th>Name</th>
@@ -27,20 +24,20 @@
           <th>Cancel</th>
         </tr>
       </thead>
-      <tbody>
-      {% block learners %}
+      <tbody id="tableBody">
+        {% block learners %}
         {% for learner in learners %}
-          <tr>
-            <td>{{ learner[1] }}</td>
-            <td>{{ learner[2] }}</td>
-            <td>{{ learner[3] }}</td>
-            <td>{{ learner[4] }}</td>
-            <td>{{ learner[5] }}</td>
-            <td>{{ learner[6] }}</td>
-            <td><input type="checkbox" name="cancelApplication" id="cancelApplication"></td>
-          </tr>
+        <tr id="row-{{ learner[0] }}">
+          <td>{{ learner[1] }}</td>
+          <td>{{ learner[2] }}</td>
+          <td>{{ learner[3] }}</td>
+          <td>{{ learner[4] }}</td>
+          <td>{{ learner[5] }}</td>
+          <td>{{ learner[6] }}</td>
+          <td><input type="checkbox" class="checkbox"></td>
+        </tr>
         {% endfor %}
-      {% endblock %}
+        {% endblock %}
       </tbody>
       <tfoot>
         <tr>
@@ -52,6 +49,14 @@
         </tr>
       </tfoot>
     </table>
-    </div>
-</body>
-</html>
+    <script>
+      function cancelApplication(learnerId) {
+        fetch(`/cancel/${learnerId}`, {
+          method: 'DELETE'
+        }).then(res => {
+          document.getElementById(`row-${learnerId}`).remove();
+        }).catch(err => console.error(`Error:: ${err}`));
+      }
+    </script>
+  </body>
+  </html>

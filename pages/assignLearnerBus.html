@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bus Registration</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/assignLearnerBus.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='../css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='../css/assignLearnerBus.css') }}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="../scripts/main.js"></script>
     <title>Bus Registration Service</title>
 </head>
 <body> 
     <div class="container">
-        <h2>Assign Learners to Buses</h2>
+        <h2>Assign Learner to Buses</h2>
         <form action="/assign-learner/bus" method="post">
             <div class="form-group">
                 <label for="bus">Select Bus:</label>

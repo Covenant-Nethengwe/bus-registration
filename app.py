@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect, url_for
 import pyodbc
 
 cnxn = pyodbc.connect(
@@ -15,15 +15,55 @@ app = Flask(
     static_folder="./css"
 )
 
+session_id = 0
+
 @app.route("/")
+def home():
+    return render_template('index.html')
+
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    names = ["Covenant", "Mihlali", "Yonwaba"]
-    for name in names:
-        print(name)
-    return render_template('login.html', names=names)
+    credentials = []
+
+    if request.method == "GET":
+        return render_template('login.html')
+    
+    if request.method == "POST":
+        email = request.form.get("email")
+        password = request.form.get("password")
+
+        if email.__contains__('@gmail'):
+            query = f'''SELECT parentid, parentemail, password FROM parent WHERE parentemail = '{email}' AND password = '{password}' '''
+
+            cursor.execute(query)
+
+            for row in cursor:
+                credentials.append(row)
+        
+        if email.__contains__('@admin'):
+            query = f'''SELECT adminid, email, password FROM administrator WHERE email = '{email}' AND password = '{password}' '''
+
+            cursor.execute(query)
+
+            for row in cursor:
+                credentials.append(row)
+
+        if not credentials:
+            message = "Incorrect email or password"
+            return render_template('login.html', warning=message)
+        else:
+            global session_id
+            session_id = credentials[0][0]
+
+            return redirect(url_for('cancel_application', parent_id=session_id))
 
 @app.route("/register/learner", methods=["GET", "POST"])
 def learner_register():
+    
+    if session_id == 0:
+        message = 'Please login!'
+        return render_template('login.html', warning=message)
+
     if request.method == "GET":
         return render_template('learnerRegister.html')
     
@@ -35,15 +75,35 @@ def learner_register():
 
         query = f'''
         INSERT INTO learner (learnername, learnersurname, learnercellphonenumber, grade) 
-        VALUES('{f_name}', '{l_name}', '{cell_no}','{grade}')'''
+        VALUES('{f_name}', '{l_name}', '{cell_no}', '{grade}')'''
         
-        cnxn.execute(query)
-        cnxn.commit()
+        cursor.execute(query)
+        cursor.commit()
+
+        recently_added_learner_query = '''SELECT TOP 1 learnerid FROM learner ORDER BY learnerid DESC'''
+        cursor.execute(recently_added_learner_query)
+        
+        learner_id = []
+        for row in cursor:
+            learner_id.append(row)
     
-    return render_template('cancelApplication.html')
+        assign_learner_parent_query = f'''
+        INSERT INTO parentlearner (parentid, learnerid) 
+        VALUES('{session_id}', '{learner_id[0][0]}')'''
+
+        cursor.execute(assign_learner_parent_query)
+        cursor.commit()
+
+        
+    
+    return redirect(url_for('cancel_application', parent_id=session_id))
 
 @app.route("/register/parent", methods=["GET", "POST"])
 def parent_register():
+    if session_id == 0:
+        message = 'Please login!'
+        return render_template('login.html', warning=message)
+
     if request.method == "GET":
         return render_template('parentRegister.html')
     
@@ -71,10 +131,14 @@ def parent_register():
             cnxn.execute(query)
             cnxn.commit()
             cnxn.close()
-            return render_template('login.html')
+            return redirect(url_for('login'))
 
 @app.route("/register/admin", methods=["GET", "POST"])
 def admin_register():
+    if session_id == 0:
+        message = 'Please login!'
+        return render_template('login.html', warning=message)
+
     if request.method == "GET":
         return render_template('adminRegister.html')
     
@@ -111,30 +175,48 @@ def assign_learner_bus():
 def send_email():
     return "<p>sending email...</p>"
 
-@app.route("/cancel/application")
-def cancel_application():
-    query = f"SELECT * FROM learner"
-    learners = []
+@app.route("/cancel/application/<parent_id>")
+def cancel_application(parent_id):
+    if session_id == 0:
+        message = 'Please login!'
+        return render_template('login.html', warning=message)
 
+    temp = []
+    children = []
+
+    query = f'''SELECT learnerid FROM parentlearner WHERE parentid = {parent_id}'''
     cursor.execute(query)
 
     for row in cursor:
-        if row[6] == True and row[5] == 1 or row[5] == 2 or row[5] == 3:
-            if row[5] == 1:
-                row[5] == "Bus 1"
-                row[6] = "Registered"
-            elif row[5] == 2:
-                row[5] == "Bus 2"
-                row[6] = "Registered"
-            elif row[5] == 3:
-                row[5] = "Bus 3"
-                row[6] = "Registered"
-        else:
-            row[6] = "Not Registered"
-        
-        learners.append(row)
-    
-    return render_template('cancelApplication.html', learners=learners)
+        temp.append(row)
 
+    for learnerid in temp:
+        learner_id = learnerid[0]
+
+        query_children = f'''SELECT * FROM learner WHERE learnerid = {learner_id}'''
+        cursor.execute(query_children)
+        for row in cursor:
+
+            if row[6] == True and row[5] == 1 or row[5] == 2 or row[5] == 3:
+                if row[5] == 1:
+                    row[5] = "Bus 1"
+                    row[6] = "Registered"
+                elif row[5] == 2:
+                    row[5] = "Bus 2"
+                    row[6] = "Registered"
+                elif row[5] == 3:
+                    row[5] = "Bus 3"
+                    row[6] = "Registered"
+            else:
+                row[6] = "Not Registered"
+
+            children.append(row)
+
+    return render_template('cancelApplication.html', learners=children)
+
+@app.route('/cancel/<learner_id>', methods=["DELETE"])
+def cancel_learner(learner_id):
+    return 
+        
 if __name__ == "__main__":
     app.run(debug=True, host="127.0.0.1", port=5000)
