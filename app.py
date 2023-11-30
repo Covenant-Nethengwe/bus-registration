@@ -94,7 +94,7 @@ def learner_register():
         cursor.execute(assign_learner_parent_query)
         cursor.commit()
 
-        # assign learner with the parent in context
+        
     
     return redirect(url_for('cancel_application', parent_id=session_id))
 
@@ -213,5 +213,10 @@ def cancel_application(parent_id):
             children.append(row)
 
     return render_template('cancelApplication.html', learners=children)
+
+@app.route('/cancel/<learner_id>', methods=["DELETE"])
+def cancel_learner(learner_id):
+    return 
+        
 if __name__ == "__main__":
     app.run(debug=True, host="127.0.0.1", port=5000)
