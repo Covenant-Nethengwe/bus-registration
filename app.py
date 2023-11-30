@@ -3,7 +3,7 @@ import pyodbc
 
 cnxn = pyodbc.connect(
     "Driver={ODBC Driver 17 for SQL Server};"
-    "Server=DELL-LAP01;"
+    "Server=LAPTOP-1A8Q1T1G\SQLEXPRESS;"
     "Database=ImpumeleloHighSchoolBusRegistrationDB;"
     "Trusted_Connection=yes;"
 )
@@ -94,8 +94,6 @@ def learner_register():
         cursor.execute(assign_learner_parent_query)
         cursor.commit()
 
-        
-    
     return redirect(url_for('cancel_application', parent_id=session_id))
 
 @app.route("/register/parent", methods=["GET", "POST"])
@@ -216,7 +214,20 @@ def cancel_application(parent_id):
 
 @app.route('/cancel/<learner_id>', methods=["DELETE"])
 def cancel_learner(learner_id):
-    return 
+    
+    unassign_bus_query = f'''DELETE FROM busschedule WHERE learnerid = {learner_id}'''
+    cursor.execute(unassign_bus_query)
+    cursor.commit()
+
+    unassign_learner_to_parent_query = f'''DELETE FROM parentlearner WHERE learnerid = {learner_id}'''
+    cursor.execute(unassign_learner_to_parent_query)
+    cursor.commit()
+
+    query = f'''DELETE FROM learner WHERE learnerid = {learner_id}'''
+    cursor.execute(query)
+    cursor.commit()
+
+    return 'This method was fired! ' + learner_id
         
 if __name__ == "__main__":
     app.run(debug=True, host="127.0.0.1", port=5000)

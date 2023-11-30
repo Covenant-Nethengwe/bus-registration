@@ -2,16 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1.0, user-scalable=n">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bus Registration</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='../css/style.css') }}">
-    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='../css/cancelApplication.css') }}">
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='../css/table.css') }}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <title>Bus Registration Service</title>
   </head>
   <body>
     <h1>Cancel Learner Appliction</h1>
     
+    {% block learners %}
     <table id="table">
       <thead>
         <tr>
@@ -25,38 +25,66 @@
         </tr>
       </thead>
       <tbody id="tableBody">
-        {% block learners %}
         {% for learner in learners %}
-        <tr id="row-{{ learner[0] }}">
+        <tr>
           <td>{{ learner[1] }}</td>
           <td>{{ learner[2] }}</td>
           <td>{{ learner[3] }}</td>
           <td>{{ learner[4] }}</td>
           <td>{{ learner[5] }}</td>
           <td>{{ learner[6] }}</td>
-          <td><input type="checkbox" class="checkbox"></td>
+          <td><button data-row-id="{{ learner[0] }}" onclick="cancelApplication(this)">Cancel</button></td>
         </tr>
         {% endfor %}
-        {% endblock %}
       </tbody>
       <tfoot>
-        <tr>
+        <tr style="padding: 125px;">
           <td colspan="7">
-            <form>
-              <button>Cancel Application</button>
-            </form>
+            <a href="/register/learner">register learner</a>
           </td>
         </tr>
       </tfoot>
     </table>
+  
+      {% for learner in learners %}
+      <ul id="mobileView">
+
+        <li><strong>Name:</strong> {{ learner[1] }}</li>
+        <br>
+        <li><esm>Surnname:</strong> {{ learner[2] }}</li>
+        <br>
+        <li><strong>Registration Status:</strong> {{ learner[6] }}</li>
+        <button onclick="cancelApplication(this)" >Cancel</button>
+      </ul>
+      {% endfor %}
+
+      <a id="mobileA" href="/register/learner">register learner</a>
+    {% endblock %}
+    
     <script>
-      function cancelApplication(learnerId) {
+      function cancelApplication(button) {
+        const learnerId = button.getAttribute('data-row-id');
+
         fetch(`/cancel/${learnerId}`, {
           method: 'DELETE'
         }).then(res => {
-          document.getElementById(`row-${learnerId}`).remove();
+          console.log(res);
+          button.closest('tr').remove();
         }).catch(err => console.error(`Error:: ${err}`));
       }
+
+      
+      document.getElementById('addNewApplication').addEventListener('click', function() {
+        fetch('/register/learner', res => {
+          res.text()
+        })
+        .then(data => {
+          console.log(data);
+        })
+        .catch(error => {
+          console.log(`Error:: ${error}`);
+        })
+      })
     </script>
   </body>
   </html>

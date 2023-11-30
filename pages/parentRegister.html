@@ -11,32 +11,45 @@
     <title>Bus Registration Service</title>
 </head>
 <body>
-    <h2>Parent Account Registration</h2>
-    <form action="/register/parent" method="post">
-        <label for="firstName">First Name:</label>
-        <input type="text" id="firstName" name="firstName" required>
+    <div class="container">
+        <h2>Parent Account Registration</h2>
+        
+        <form action="/register/parent" method="post">
+            <div class="form-group">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" name="firstName" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" name="lastName" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="exapmle@gmail.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
 
-        <label for="lastName">Last Name:</label>
-        <input type="text" id="lastName" name="lastName" required>
-
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" value="exapmle@gmail.com" required>
-
-        <label for="phone">Phone Number:</label>
-        <input type="tel" id="phone" name="phone" required>
-
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-
-        <label for="confirmPassword">Confirm Password:</label>
-        <input type="password" id="confirmPassword" name="confirmPassword" required>
-
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password:</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+            </div>
             <p style="text-align: center; color: red; margin: 5px;">
                 {{ warning }}
             </p>
 
         <button type="submit" id="btnRegisterParent">Create Account</button>
-    </form>
+        </form>
+    </div>
 
 </body>
 </html>

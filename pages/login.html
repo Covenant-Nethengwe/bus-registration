@@ -11,22 +11,29 @@
     <title>Bus Registration Service</title>
 </head>
 <body>
-    <h1>This is the login page!!!</h1>
+    <div class="container">
+        <h2>Login</h2>
    
-    <form action="/login" method="POST">
+        <form action="/login" method="POST">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" placeholder="email@example.com" required>
+            </div>
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" placeholder="email@example.com" required>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
+            <p style="text-align: center; color: red; margin: 5px;">
+                {{ warning }}
+            </p>
+    
+            <button type="submit" id="registerAdmin">Login</button>
 
-        <p style="text-align: center; color: red; margin: 5px;">
-            {{ warning }}
-        </p>
+        </form>
 
-        <button type="submit" id="registerAdmin">Login</button>
-
-    </form>
+        <a style="margin-top: 20px;" href="/register/parent">New? Click here to register</a>
+    </div>
 </body>
 </html>
