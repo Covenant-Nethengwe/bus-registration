@@ -59,7 +59,11 @@ def login():
 
 @app.route("/register/learner", methods=["GET", "POST"])
 def learner_register():
-    print(session_id)
+    
+    if session_id == 0:
+        message = 'Please login!'
+        return render_template('login.html', warning=message)
+
     if request.method == "GET":
         return render_template('learnerRegister.html')
     
@@ -96,6 +100,10 @@ def learner_register():
 
 @app.route("/register/parent", methods=["GET", "POST"])
 def parent_register():
+    if session_id == 0:
+        message = 'Please login!'
+        return render_template('login.html', warning=message)
+
     if request.method == "GET":
         return render_template('parentRegister.html')
     
@@ -127,6 +135,10 @@ def parent_register():
 
 @app.route("/register/admin", methods=["GET", "POST"])
 def admin_register():
+    if session_id == 0:
+        message = 'Please login!'
+        return render_template('login.html', warning=message)
+
     if request.method == "GET":
         return render_template('adminRegister.html')
     
@@ -165,6 +177,10 @@ def send_email():
 
 @app.route("/cancel/application/<parent_id>")
 def cancel_application(parent_id):
+    if session_id == 0:
+        message = 'Please login!'
+        return render_template('login.html', warning=message)
+
     temp = []
     children = []
 
