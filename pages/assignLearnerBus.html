@@ -10,7 +10,42 @@
     <script src="../scripts/main.js"></script>
     <title>Bus Registration Service</title>
 </head>
-<body>
-    <h1>Assign learner bus</h1>
+<body> 
+    <div class="container">
+        <h2>Assign Learners to Buses</h2>
+        <form action="/assign-learner/bus" method="post">
+            <div class="form-group">
+                <label for="bus">Select Bus:</label>
+                <select id="bus" name="bus" required>
+                    <option value="bus1">Bus 1</option>
+                    <option value="bus2">Bus 2</option>
+                    <option value="bus3">Bus 3</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="pickupTime">Pickup Time:</label>
+                <input type="time" id="pickupTime" name="pickupTime" required>
+            </div>
+
+            <div class="form-group">
+                <label for="dropoffTime">Dropoff Time:</label>
+                <input type="time" id="dropoffTime" name="dropoffTime" required>
+            </div>
+
+            <div class="form-group">
+                <label for="grade">Grade:</label>
+                <select id="grade" name="grade" required>
+                    <option value="8">8th Grade</option>
+                    <option value="9">9th Grade</option>
+                    <option value="10">10th Grade</option>
+                    <option value="11">11th Grade</option>
+                    <option value="12">12th Grade</option>
+                </select>
+            </div>
+
+            <button type="submit">Assign Learner</button>
+        </form>
+    </div>
 </body>
 </html>

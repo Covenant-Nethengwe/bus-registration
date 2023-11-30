@@ -1,4 +1,4 @@
-table,
+/* table,
 td {
   border: 1px solid #333;
   text-align: center;
@@ -39,4 +39,74 @@ button {
 
 h1{
   text-align: center;
+} */
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+h1 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.table-container {
+  overflow-x: auto;
+  margin: auto;
+  width: 90%;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: auto;
+}
+
+td, th {
+  border: 1px solid #333;
+  text-align: center;
+  font-size: 1.5rem;
+  padding: 10px;
+}
+
+thead, tfoot {
+  background-color: #333;
+  color: #fff;
+}
+
+th {
+  padding: 20px;
+}
+
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 1rem;
+  font-size: 1.3rem;
+}
+
+@media (max-width: 600px) {
+  h1 {
+      font-size: 1.5rem;
+  }
+
+  td, th {
+      font-size: 1rem;
+      padding: 8px;
+  }
+
+  th {
+      padding: 10px;
+  }
+
+  button {
+      font-size: 1rem;
+  }
 }
