@@ -17,6 +17,10 @@ app = Flask(
 
 session_id = 0
 
+@app.route("/")
+def home():
+    return render_template('index.html')
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     credentials = []
@@ -27,7 +31,7 @@ def login():
     if request.method == "POST":
         email = request.form.get("email")
         password = request.form.get("password")
-        print(request.form)
+
         if email.__contains__('@gmail'):
             query = f'''SELECT parentid, parentemail, password FROM parent WHERE parentemail = '{email}' AND password = '{password}' '''
 
@@ -50,11 +54,12 @@ def login():
         else:
             global session_id
             session_id = credentials[0][0]
-            print(session_id)
+
             return redirect(url_for('cancel_application', parent_id=session_id))
 
 @app.route("/register/learner", methods=["GET", "POST"])
 def learner_register():
+    print(session_id)
     if request.method == "GET":
         return render_template('learnerRegister.html')
     
@@ -66,12 +71,28 @@ def learner_register():
 
         query = f'''
         INSERT INTO learner (learnername, learnersurname, learnercellphonenumber, grade) 
-        VALUES('{f_name}', '{l_name}', '{cell_no}','{grade}')'''
+        VALUES('{f_name}', '{l_name}', '{cell_no}', '{grade}')'''
         
-        cnxn.execute(query)
-        cnxn.commit()
+        cursor.execute(query)
+        cursor.commit()
+
+        recently_added_learner_query = '''SELECT TOP 1 learnerid FROM learner ORDER BY learnerid DESC'''
+        cursor.execute(recently_added_learner_query)
+        
+        learner_id = []
+        for row in cursor:
+            learner_id.append(row)
     
-    return redirect('/cancel/application')
+        assign_learner_parent_query = f'''
+        INSERT INTO parentlearner (parentid, learnerid) 
+        VALUES('{session_id}', '{learner_id[0][0]}')'''
+
+        cursor.execute(assign_learner_parent_query)
+        cursor.commit()
+
+        # assign learner with the parent in context
+    
+    return redirect(url_for('cancel_application', parent_id=session_id))
 
 @app.route("/register/parent", methods=["GET", "POST"])
 def parent_register():
@@ -159,7 +180,7 @@ def cancel_application(parent_id):
         query_children = f'''SELECT * FROM learner WHERE learnerid = {learner_id}'''
         cursor.execute(query_children)
         for row in cursor:
-            print(row)
+
             if row[6] == True and row[5] == 1 or row[5] == 2 or row[5] == 3:
                 if row[5] == 1:
                     row[5] = "Bus 1"
