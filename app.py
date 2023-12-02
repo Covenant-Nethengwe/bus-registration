@@ -98,9 +98,6 @@ def learner_register():
 
 @app.route("/register/parent", methods=["GET", "POST"])
 def parent_register():
-    if session_id == 0:
-        message = 'Please login!'
-        return render_template('login.html', warning=message)
 
     if request.method == "GET":
         return render_template('parentRegister.html')
