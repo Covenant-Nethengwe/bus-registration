@@ -1,11 +1,15 @@
 from flask import Flask, request, render_template, redirect, url_for
+from flask_mail import Mail, Message
 import pyodbc
+from dotenv import load_dotenv
+load_dotenv()
+import os
 
 cnxn = pyodbc.connect(
-    "Driver={ODBC Driver 17 for SQL Server};"
-    "Server=LAPTOP-1A8Q1T1G\SQLEXPRESS;"
-    "Database=ImpumeleloHighSchoolBusRegistrationDB;"
-    "Trusted_Connection=yes;"
+    f'Driver={os.getenv('DRIVER')};'
+    f'Server={os.getenv('SERVER')};'
+    f'Database={os.getenv('DATABASE')};'
+    'Trusted_Connection=yes;'
 )
 cursor = cnxn.cursor()
 
@@ -14,6 +18,17 @@ app = Flask(
     template_folder="./pages",
     static_folder="./css"
 )
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+app.config['MAIL_DEBUG'] = True
+app.config['MAIL_SUPPRESS_SEND'] = False
+app.config['TESTING'] = False
+mail = Mail(app)
 
 session_id = 0
 
@@ -75,7 +90,7 @@ def login():
 
 
 @app.route("/register/learner", methods=["GET", "POST"])
-def learner_register():
+async def learner_register():
     
     if session_id == 0:
         message = 'Please login!'
@@ -110,6 +125,10 @@ def learner_register():
 
         cursor.execute(assign_learner_parent_query)
         cursor.commit()
+    
+        body = f'''
+        Congradulations 🎉, You have successfully registerd a bus for {f_name} {l_name}.'''
+        await send_email(body)
 
     return redirect(url_for('cancel_application', parent_id=session_id))
 
@@ -273,8 +292,13 @@ def assign_learner_bus(learner_id):
     return redirect(url_for('assign_bus', admin_id=session_id))
 
 @app.route("/send/email")
-def send_email():
-    return "<p>sending email...</p>"
+async def send_email(body):
+
+    message = Message('Impumelelo Bus Application', sender='noreply@impumelelo.com', recipients=['mihlalilindwanyaza@gamil.com'])
+    message.body = body
+    mail.send(message)
+
+    return 'Mail sent.'
 
 @app.route("/cancel/application/<parent_id>")
 def cancel_application(parent_id):
@@ -330,7 +354,7 @@ def cancel_learner(learner_id):
     cursor.execute(query)
     cursor.commit()
 
-    return 'This method was fired! ' + learner_id
+    return f'''Leaner with id: {learner_id} was successfully cancelled.'''
         
 if __name__ == "__main__":
-    app.run(debug=True, host="127.0.0.1", port=5000)
+    app.run(debug=True)
