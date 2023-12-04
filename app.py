@@ -21,6 +21,12 @@ session_id = 0
 def home():
     return render_template('index.html')
 
+@app.route('/logout')
+def logout():
+    global session_id
+    session_id = 0
+    return redirect(url_for('login'))
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     credentials = []
