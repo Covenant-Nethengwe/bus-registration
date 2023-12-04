@@ -3,48 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='../css/table.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <title>Bus Registration Service</title>
 </head>
 <body>
-    <div class="table-container">
-        <form action="/cancel/application"></form>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Surname</th>
-            <th>Cell No.</th>
-            <th>Grade</th>
-            <th>Bus Name</th>
-            <th>Registration Status</th>
-            <th>Cancel</th>
-          </tr>
-        </thead>
-        <tbody>
-        {% block learners %}
-          {% for learner in learners %}
-            <tr>
-              <td>{{ learner[1] }}</td>
-              <td>{{ learner[2] }}</td>
-              <td>{{ learner[3] }}</td>
-              <td>{{ learner[4] }}</td>
-              <td>{{ learner[5] }}</td>
-              <td>{{ learner[6] }}</td>
-              <td><input type="checkbox" name="cancelApplication" id="cancelApplication"></td>
-            </tr>
-          {% endfor %}
-        {% endblock %}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="7">
-              <form>
-                <button>Assing Learner Bus</button>
-              </form>
-            </td>
-          </tr>
-        </tfoot>
-      </table>
-      </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Surname</th>
+        <th>Cell No.</th>
+        <th>Grade</th>
+        <th>Bus Name</th>
+        <th>Registration Status</th>
+        <th>Assign</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% block learners %}
+      {% for learner in learners %}
+        <tr>
+          <td>{{ learner[1] }}</td>
+          <td>{{ learner[2] }}</td>
+          <td>{{ learner[3] }}</td>
+          <td>{{ learner[4] }}</td>
+          <td>{{ learner[5] }}</td>
+          <td>{{ learner[6] }}</td>
+          <td><button data-row-id="{{ learner[0] }}" onclick="assignBus(this)">Assign</button></td>
+        </tr>
+      {% endfor %}
+    {% endblock %}
+    </tbody>
+  </table>
+  
+  <script>
+    function assignBus(button) {
+        const learnerId = button.getAttribute('data-row-id');
+
+        fetch(`/assign-learner/bus/${learnerId}`, {
+          method: 'GET'
+        }).then(res => {
+          console.log(res);
+          window.location.replace(res.url);
+        }).catch(err => console.error(`Error:: ${err}`));
+      }
+  </script>
 </body>
 </html>
