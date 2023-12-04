@@ -147,9 +147,6 @@ def parent_register():
 
 @app.route("/register/admin", methods=["GET", "POST"])
 def admin_register():
-    if session_id == 0:
-        message = 'Please login!'
-        return render_template('login.html', warning=message)
 
     if request.method == "GET":
         return render_template('adminRegister.html')
