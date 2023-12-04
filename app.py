@@ -51,11 +51,22 @@ def login():
         if not credentials:
             message = "Incorrect email or password"
             return render_template('login.html', warning=message)
-        else:
-            global session_id
+        
+        global session_id
+        
+        if credentials[0][1].__contains__('@gmail'):
             session_id = credentials[0][0]
 
             return redirect(url_for('cancel_application', parent_id=session_id))
+        
+        if credentials[0][1].__contains__('@admin'):
+            session_id = credentials[0][0]
+
+            return redirect(url_for('assign_bus', admin_id=session_id))
+        else:
+            message = "Email must contain @admin or @gmail"
+            return render_template('login.html', warning=message)
+
 
 @app.route("/register/learner", methods=["GET", "POST"])
 def learner_register():
@@ -162,9 +173,101 @@ def admin_register():
             cnxn.close()
             return render_template('login.html')
 
-@app.route("/assign-learner/bus")
-def assign_learner_bus():
-    return render_template('assignLearnerBus.html')
+@app.route("/assign/bus/<admin_id>", methods=["GET", "POST"])
+def assign_bus(admin_id):
+    if session_id == 0:
+        message = 'Please login!'
+        return render_template('login.html', warning=message)
+
+    learners = []
+
+    query = f'''SELECT * FROM learner'''
+
+    cursor.execute(query)
+
+    for row in cursor:
+        if row[6] == True and row[5] == 1 or row[5] == 2 or row[5] == 3:
+            if row[5] == 1:
+                row[5] = "Bus 1"
+                row[6] = "Registered"
+            elif row[5] == 2:
+                row[5] = "Bus 2"
+                row[6] = "Registered"
+            elif row[5] == 3:
+                row[5] = "Bus 3"
+                row[6] = "Registered"
+        else:
+            row[6] = "Not Registered"
+    
+        learners.append(row)
+
+    return render_template('assignBus.html', learners=learners)
+
+@app.route("/assign-learner/bus/<learner_id>", methods=["GET" ,"POST"])
+def assign_learner_bus(learner_id):
+
+    if session_id == 0:
+        message = 'Please login!'
+        return render_template('login.html', warning=message)
+
+    if request.method == "GET":
+        global learner_id_name
+        query = f'''SELECT learnerid, learnername FROM learner WHERE learnerid = {learner_id}'''
+        cursor.execute(query)
+        
+        for row in cursor:
+            learner_id_name = row
+        
+        return render_template('assignLearnerBus.html', learner=learner_id_name)
+
+    if request.method == "POST":
+
+        bus_name = request.form.get('bus')
+        pick_up_time = request.form.get('pickupTime')
+        drop_off_time = request.form.get('dropoffTime')
+
+        print(f'''{bus_name} {pick_up_time} {drop_off_time}''')
+
+        if bus_name == 'Bus 1':
+            query = f'''
+            INSERT INTO busschedule (pickuptime, dropofftime, pickupname, dropoffname, pickupnumber, dropoffnumber, learnerid) 
+            VALUES ('{pick_up_time}', '{drop_off_time}', '{bus_name}', '{bus_name}', '{35}', '{35}', {learner_id})'''
+            cursor.execute(query)
+            cursor.commit()
+            
+            update_learner_query = f'''
+            UPDATE learner SET busid={1}, registrationstatus={1}, adminid={session_id} 
+            WHERE learnerid = {learner_id}'''
+            cursor.execute(update_learner_query)
+            cursor.commit()
+
+        elif bus_name == 'Bus 2':
+            query = f'''
+            INSERT INTO busschedule (pickuptime, dropofftime, pickupname, dropoffname, pickupnumber, dropoffnumber, learnerid) 
+            VALUES ('{pick_up_time}', '{drop_off_time}', '{bus_name}', '{bus_name}', '{15}', '{15}', {learner_id})'''
+            cursor.execute(query)
+            cursor.commit()
+            
+            update_learner_query = f'''
+            UPDATE learner SET busid={2}, registrationstatus={1}, adminid={session_id} 
+            WHERE learnerid = {learner_id}'''
+            cursor.execute(update_learner_query)
+            cursor.commit()
+
+        elif bus_name == 'Bus 3':
+            query = f'''
+            INSERT INTO busschedule (pickuptime, dropofftime, pickupname, dropoffname, pickupnumber, dropoffnumber, learnerid) 
+            VALUES ('{pick_up_time}', '{drop_off_time}', '{bus_name}', '{bus_name}', '{15}', '{15}', {learner_id})'''
+            cursor.execute(query)
+            cursor.commit()
+            
+            update_learner_query = f'''
+            UPDATE learner SET busid={3}, registrationstatus={1}, adminid={session_id} 
+            WHERE learnerid = {learner_id}'''
+            cursor.execute(update_learner_query)
+            cursor.commit()
+
+    return redirect(url_for('assign_bus', admin_id=session_id))
 
 @app.route("/send/email")
 def send_email():
