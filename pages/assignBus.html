@@ -8,8 +8,11 @@
     <title>Bus Registration Service</title>
 </head>
 <body>
-  <a href="/logout">Logoff</a>
-  <table>
+  <a class="logoff" href="/logout">Logoff</a>
+
+  <h1>Assign Learner Bus</h1>
+
+  <table id="table">
     <thead>
       <tr>
         <th>Name</th>
@@ -21,7 +24,7 @@
         <th>Assign</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody id="tableBody">
     {% block learners %}
       {% for learner in learners %}
         <tr>
@@ -37,6 +40,21 @@
     {% endblock %}
     </tbody>
   </table>
+
+  <ul id="mobileView">
+    <div>
+      {% for learner in learners %}
+      <div id="mobileDiv">
+        <li><strong>Name:</strong> {{ learner[1] }}</li>
+        <li><strong>Surnname:</strong> {{ learner[2] }}</li>
+        <li><strong>Grade:</strong> {{ learner[4] }}</li>
+        <li><strong>Bus Name:</strong> {{ learner[5] }}</li>
+        <li><strong>Registration Status:</strong> {{ learner[6] }}</li>
+        <button onclick="assignBus(this)" >Assign</button>
+      </div>
+      {% endfor %}
+    </div>
+  </ul>
   
   <script>
     function assignBus(button) {

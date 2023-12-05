@@ -97,7 +97,7 @@ async def learner_register():
         return render_template('login.html', warning=message)
 
     if request.method == "GET":
-        return render_template('learnerRegister.html')
+        return render_template('learnerRegister.html', session_id=session_id)
     
     if request.method == "POST":
         f_name = request.form.get("learnerName")

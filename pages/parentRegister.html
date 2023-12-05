@@ -5,17 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bus Registration</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='../css/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='../css/parentRegistration.css') }}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="../scripts/main.js"></script>
     <title>Bus Registration Service</title>
 </head>
 <body>
     <div class="container">
-        <h2>Parent Account Registration</h2>
-        <a href="/register/admin">Click here to register as Admin</a>
+        <a href="/login">Back</a>
         
-        <form action="/register/parent" method="post">
+        <h2 style="margin-bottom: 10px;">Parent Account Registration</h2>
+
+        <a style="font-size: 1.1rem; color: #4CAF50;" href="/register/admin">Click here to register as Admin</a>
+        
+        <form style="margin: 15px;" action="/register/parent" method="post">
             <div class="form-group">
                 <label for="firstName">First Name:</label>
                 <input type="text" id="firstName" name="firstName" required>

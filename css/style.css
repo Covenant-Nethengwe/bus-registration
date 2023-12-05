@@ -19,6 +19,13 @@ body {
     text-align: center;
 }
 
+a:first-child {
+    margin-right: 250px;
+    font-size: 1.2rem;
+    text-decoration: none;
+    color: red;
+}
+
 h2 {
     color: #333;
     margin-bottom: 20px;

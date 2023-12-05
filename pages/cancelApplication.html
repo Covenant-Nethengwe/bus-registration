@@ -8,7 +8,8 @@
     <title>Bus Registration Service</title>
   </head>
   <body>
-    <a href="/logout">Logoff</a>
+    <a class="logoff" href="/logout">Logoff</a>
+
     <h1>Cancel Learner Appliction</h1>
     
     {% block learners %}
@@ -46,20 +47,21 @@
       </tfoot>
     </table>
   
-      {% for learner in learners %}
-      <ul id="mobileView">
+    <ul id="mobileView">
+      <div>
+        {% for learner in learners %}
+        <div id="mobileDiv">
+          <li><strong>Name:</strong> {{ learner[1] }}</li>
+          <li><strong>Surnname:</strong> {{ learner[2] }}</li>
+          <li><strong>Registration Status:</strong> {{ learner[6] }}</li>
+          <button onclick="cancelApplication(this)" >Cancel</button>
+        </div>
+        {% endfor %}
+      </div>
+    </ul>
 
-        <li><strong>Name:</strong> {{ learner[1] }}</li>
-        <br>
-        <li><esm>Surnname:</strong> {{ learner[2] }}</li>
-        <br>
-        <li><strong>Registration Status:</strong> {{ learner[6] }}</li>
-        <button onclick="cancelApplication(this)" >Cancel</button>
-      </ul>
-      {% endfor %}
-
-      <a id="mobileA" href="/register/learner">register learner</a>
     {% endblock %}
+    <a id="mobileA" href="/register/learner">register learner</a>
     
     <script>
       function cancelApplication(button) {
