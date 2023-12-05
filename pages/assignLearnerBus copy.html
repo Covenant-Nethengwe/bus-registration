@@ -12,10 +12,10 @@
 </head>
 <body> 
     <div class="container">
-        <a href="/assign/bus/{{ admin_learner_session[1] }}">Back</a>
+        <a href="/assign/bus/{{ learner[1] }}">Back</a>
 
-        <h2>Assign Bus to: {{ admin_learner_session[0][1] }}</h2>
-        <form action="/assign-learner/bus/{{ admin_learner_session[0][0] }}" method="post">
+        <h2>Assign Bus to: {{ learner[0][1] }}</h2>
+        <form action="/assign-learner/bus/{{ learner[0][0] }}" method="post">
             <div class="form-group">
                 <label for="bus">Select Bus:</label>
                 <select id="bus" name="bus" required>

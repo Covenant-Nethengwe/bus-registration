@@ -50,7 +50,7 @@
         <li><strong>Grade:</strong> {{ learner[4] }}</li>
         <li><strong>Bus Name:</strong> {{ learner[5] }}</li>
         <li><strong>Registration Status:</strong> {{ learner[6] }}</li>
-        <button onclick="assignBus(this)" >Assign</button>
+        <button data-row-id="{{ learner[0] }}" onclick="assignBus(this)" >Assign</button>
       </div>
       {% endfor %}
     </div>

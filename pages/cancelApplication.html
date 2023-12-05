@@ -10,7 +10,11 @@
   <body>
     <a class="logoff" href="/logout">Logoff</a>
 
-    <h1>Cancel Learner Appliction</h1>
+    {% if not learner %}
+      <h1>Please register learner</h1>
+      {% else %}
+      <h1>Cancel Application</h1>
+    {% endif %}
     
     {% block learners %}
     <table id="table">
@@ -54,7 +58,7 @@
           <li><strong>Name:</strong> {{ learner[1] }}</li>
           <li><strong>Surnname:</strong> {{ learner[2] }}</li>
           <li><strong>Registration Status:</strong> {{ learner[6] }}</li>
-          <button onclick="cancelApplication(this)" >Cancel</button>
+          <button data-row-id="{{ learner[0] }}" onclick="cancelApplicationMobile(this)" >Cancel</button>
         </div>
         {% endfor %}
       </div>
@@ -67,6 +71,7 @@
       function cancelApplication(button) {
         const learnerId = button.getAttribute('data-row-id');
 
+        console.log(learnerId);
         fetch(`/cancel/${learnerId}`, {
           method: 'DELETE'
         }).then(res => {
@@ -74,19 +79,18 @@
           button.closest('tr').remove();
         }).catch(err => console.error(`Error:: ${err}`));
       }
-
       
-      document.getElementById('addNewApplication').addEventListener('click', function() {
-        fetch('/register/learner', res => {
-          res.text()
-        })
-        .then(data => {
-          console.log(data);
-        })
-        .catch(error => {
-          console.log(`Error:: ${error}`);
-        })
-      })
+      function cancelApplicationMobile(button) {
+        const learnerId = button.getAttribute('data-row-id');
+
+        console.log(learnerId);
+        fetch(`/cancel/${learnerId}`, {
+          method: 'DELETE'
+        }).then(res => {
+          console.log(res);
+          button.closest('div').remove();
+        }).catch(err => console.error(`Error:: ${err}`));
+      }
     </script>
   </body>
   </html>

@@ -161,7 +161,6 @@ def parent_register():
             
             cnxn.execute(query)
             cnxn.commit()
-            cnxn.close()
             return redirect(url_for('login'))
 
 @app.route("/register/admin", methods=["GET", "POST"])
@@ -192,7 +191,6 @@ def admin_register():
             
             cnxn.execute(query)
             cnxn.commit()
-            cnxn.close()
             return render_template('login.html')
 
 @app.route("/assign/bus/<admin_id>", methods=["GET", "POST"])
@@ -239,8 +237,9 @@ def assign_learner_bus(learner_id):
         
         for row in cursor:
             learner_id_name = row
-        
-        return render_template('assignLearnerBus.html', learner=learner_id_name)
+    
+        admin_learner_session = [learner_id_name, session_id]
+        return render_template('assignLearnerBus.html', admin_learner_session=admin_learner_session)
 
     if request.method == "POST":
 
@@ -336,7 +335,6 @@ def cancel_application(parent_id):
                 row[6] = "Not Registered"
 
             children.append(row)
-
     return render_template('cancelApplication.html', learners=children)
 
 @app.route('/cancel/<learner_id>', methods=["DELETE"])
